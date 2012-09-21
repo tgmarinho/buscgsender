@@ -9,6 +9,7 @@ public class BusCgSenderActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
     
+        
     }
     
     
