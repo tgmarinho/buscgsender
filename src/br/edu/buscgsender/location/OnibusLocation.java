@@ -1,98 +1,138 @@
 package br.edu.buscgsender.location;
 
-import android.content.Context;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import android.app.Activity;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
-import br.com.livro.android.Ponto;
-import br.com.livro.android.R;
+import android.widget.Toast;
+import br.edu.buscgsender.R;
+import br.edu.buscgsender.webservice.ClienteRest;
+import br.edu.pojos.Onibus;
 
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapController;
-import com.google.android.maps.MapView;
-import com.google.android.maps.MyLocationOverlay;
+public class OnibusLocation extends Activity implements LocationListener {
 
+	private LocationManager locationManager;
+	Bundle params;
+	Intent it;
 
-public class OnibusLocation extends MapActivity implements LocationListener {
-	private MapController map_controller;
-	private MapView mapview;
-	private MyLocationOverlay posicaoAtual;
-	
-	// Ciclo de vida da acitivity começa
 	@Override
-	public void onCreate(Bundle icicle) {
-		super.onCreate(icicle);
-		// Exibe o arquivo laytoute main.xml
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		// Faz um binding (ligação com arquivo) com o componente MapView declarado do arquivo main.xml
-		mapview = (MapView) findViewById(R.id.mapa);
-		// A referencia map_controller assume o controle do mapa
-		map_controller = mapview.getController();
-		// com o controle do mapa, adiciona o zoom 16 (para ficar próximo a Terra
-		map_controller.setZoom(16);
-		// Adicciona o componente para controlar o zoom por toque na tela
-		mapview.setBuiltInZoomControls(true);  
-		
-		// Centraliza o mapa na última localizão conhecida
-		Location loc = getLocationManager().getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-		// Se existe ultima localização converte para GeoPoint
-		if (loc != null) {
-			// Utiliza a classe Ponto que sabe fazer a conversão dos pontos geográficos (ver listagem 2)
-			GeoPoint ponto_ultimalocalizacao = new Ponto(loc.getLatitude(), loc.getLatitude());
-			map_controller.setCenter(ponto_ultimalocalizacao);
-		}
-		// Instancia a minha localização na referencia posicaoAtual, informando o contexto e o componente MapView
-		posicaoAtual = new MyLocationOverlay(this, mapview);
-		posicaoAtual.runOnFirstFix(new Runnable() {
-			// Melhora a precisão da localização
-			@Override
-			public void run() {	}
-		});
-		// Adiciona no mapa a posição atual
-		mapview.getOverlays().add(posicaoAtual);
-		// Sempre que a localização alterar, chamar essa implementação
-		getLocationManager().requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-	}
+		it = getIntent();
+		params = it.getExtras();
 
-	private LocationManager getLocationManager() {
-		return (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 	}
 
 	@Override
 	protected void onResume() {
+		Toast.makeText(this, "app resumed", Toast.LENGTH_SHORT).show();
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
+				0f, this);
 		super.onResume();
-		// Registra o listener
-		posicaoAtual.enableMyLocation();
 	}
 
 	@Override
 	protected void onPause() {
+		Toast.makeText(this, "app paused", Toast.LENGTH_SHORT).show();
+		// turn off to save battery
+		locationManager.removeUpdates(this);
 		super.onPause();
-		// Remove o listener
-		posicaoAtual.disableMyLocation();
 	}
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		// Remove o listener para não ficar atualizando mesmo depois de sair
-		getLocationManager().removeUpdates(this);
+	public void finish() {
+		// save some information before exit
+		Toast.makeText(this, "activity killed", Toast.LENGTH_SHORT).show();
+		super.finish();
 	}
 
+	@Override
+	protected void onStop() {
+		// save some information before exit
+		Toast.makeText(this, "app stoped", Toast.LENGTH_SHORT).show();
+		super.onStop();
+	}
+
+	@Override
 	public void onLocationChanged(Location location) {
-		GeoPoint point = new Ponto(location.getLatitude(), location.getLongitude());
-		map_controller.animateTo(point);
-		mapview.invalidate();
+		double longitude = location.getLongitude();
+		double latitude = location.getLatitude();
+		double altitude = location.getAltitude();
+		float accurancy = location.getAccuracy();
+		long time = location.getTime();
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		Calendar c = Calendar.getInstance();
+		c.setTimeInMillis(time);
+		String tempo = sdf.format(c.getTime());
+		String s = "Location Changed: longitude[" + longitude + "] \nlatitude["
+				+ latitude + "] \naltitude[" + altitude + "] \naccurancy["
+				+ accurancy + "] \ntime[" + tempo + "]";
+		Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+
+		// Chamo uma clases qye vau mintar o a katutyde e lingtude e evniar para
+		// oservidor
+
+		// Pego o codigo do onibus para passar para webservice
+		if (params != null) {
+			int posicao = params.getInt("id_onibus");
+			ClienteRest cliREST = new ClienteRest();
+			Onibus o = new Onibus();
+			o.setId(posicao);
+			o.setLatitude(latitude);
+			o.setLongitude(longitude);
+
+			try {
+				String resposta = cliREST.enviarCoordenada(o);
+				gerarToast(resposta);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 	}
-	// Como não estamos exibindo rota nesse exemplo, o returno pode ser false, mas caso contrário o retorno DEVE ser verdadeiro
+
+	private void gerarToast(String resposta) {
+		int duration = Toast.LENGTH_LONG;
+		Toast toast = Toast.makeText(getApplicationContext(), "o que ocorreu: " + resposta, duration);
+		toast.show();
+	}
+
 	@Override
-	protected boolean isRouteDisplayed() {
-		return false;
+	public void onProviderDisabled(String provider) {
+		Toast.makeText(this, "Provider is disable", Toast.LENGTH_SHORT).show();
 	}
-	public void onProviderDisabled(String provider) { }
-	public void onProviderEnabled(String provider) { }
-	public void onStatusChanged(String provider, int status, Bundle extras) { }
+
+	@Override
+	public void onProviderEnabled(String provider) {
+		Toast.makeText(this, "Provider is enable", Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		switch (status) {
+		case LocationProvider.OUT_OF_SERVICE:
+			Toast.makeText(this, "Status Changed: Out of Service",
+					Toast.LENGTH_SHORT).show();
+			break;
+		case LocationProvider.TEMPORARILY_UNAVAILABLE:
+			Toast.makeText(this, "Status Changed: Temporarily Unavailable",
+					Toast.LENGTH_SHORT).show();
+			break;
+		case LocationProvider.AVAILABLE:
+			Toast.makeText(this, "Status Changed: Available",
+					Toast.LENGTH_SHORT).show();
+			break;
+		}
+	}
+
 }

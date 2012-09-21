@@ -1,6 +1,7 @@
 package br.edu.buscgsender;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -8,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 import br.edu.buscgsender.location.OnibusLocation;
-import br.edu.pojos.Onibus;
+import br.edu.buscgsender.webservice.ClienteRest;
 
 public class LocalizarOnibus extends Activity {
 
@@ -28,20 +29,20 @@ public class LocalizarOnibus extends Activity {
 
 		// Se selecionar algum planeta atualiza a imagem
 		combo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-			public void onItemSelected(AdapterView parent, View v, int posicao,
-					long id) {
-				// imagem.setImageResource(imagens[posicao]);
-				OnibusLocation ol = new OnibusLocation();
-				ol.localizarOnibus(id);
-
+			public void onItemSelected(AdapterView parent, View v, int posicao, long id) {
+				
+				Intent it = new Intent(v.getContext(), OnibusLocation.class);
+                Bundle params = new Bundle();
+                params.putInt("id_onibus", posicao);
+                it.putExtras(params);
+                // inicio a atividade OnibusLocatino que recebe os dados da coordenada geográfica
+                startActivity(it);
+	
 			}
 
 			private void localizarOnibus(int id) {
 				ClienteRest cliREST = new ClienteRest();
 				try {
-					Onibus onibus = cliREST.get(id);
-					
-					// Pego o Onibus e chamo o MapView 
 					
 					
 				} catch (Exception e) {
