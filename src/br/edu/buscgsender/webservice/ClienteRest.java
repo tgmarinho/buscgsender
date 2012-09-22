@@ -11,7 +11,7 @@ import com.google.gson.Gson;
 public class ClienteRest {
 
 	private static final String URL_WS = "http://192.168.1.103:8089/ServerBus/rest/onibus/";
-
+//192.168.1.103
 	public Onibus get(int id) throws Exception {
 
 		String[] resposta = new WebServiceClient().get(URL_WS + id);
@@ -20,18 +20,6 @@ public class ClienteRest {
 			Gson gson = new Gson();
 			Onibus o = gson.fromJson(resposta[1], Onibus.class);
 			return o;
-		} else {
-			throw new Exception(resposta[1]);
-		}
-	}
-
-	public String enviarCoordenada(Onibus o) throws Exception {
-
-		Gson gson = new Gson();
-		String onibusJSON = gson.toJson(o);
-		String[] resposta = new WebServiceClient().post(URL_WS, onibusJSON);
-		if (resposta[0].equals("200")) {
-			return resposta[1];
 		} else {
 			throw new Exception(resposta[1]);
 		}

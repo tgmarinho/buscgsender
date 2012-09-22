@@ -26,10 +26,12 @@ public class OnibusLocation extends Activity implements LocationListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
+		
 		it = getIntent();
-		params = it.getExtras();
-
+		params =  it.getExtras();
+		
+		System.err.println("nome do onibus: " + params.getString("nome_onibus"));
+		System.err.println("id do onibus: " + params.getInt("id_onibus"));
 	}
 
 	@Override
@@ -77,33 +79,32 @@ public class OnibusLocation extends Activity implements LocationListener {
 		String s = "Location Changed: longitude[" + longitude + "] \nlatitude["
 				+ latitude + "] \naltitude[" + altitude + "] \naccurancy["
 				+ accurancy + "] \ntime[" + tempo + "]";
-		Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
 
 		// Chamo uma clases qye vau mintar o a katutyde e lingtude e evniar para
 		// oservidor
 
 		// Pego o codigo do onibus para passar para webservice
-		if (params != null) {
-			int posicao = params.getInt("id_onibus");
-			ClienteRest cliREST = new ClienteRest();
-			Onibus o = new Onibus();
-			o.setId(posicao);
-			o.setLatitude(latitude);
-			o.setLongitude(longitude);
+		ClienteRest cliREST = new ClienteRest();
+		Onibus o = new Onibus();
+		o.setId(params.getInt("id_onibus"));
+		o.setNome(params.getString("nome_onibus"));
+		o.setLatitude(latitude);
+		o.setLongitude(longitude);
 
-			try {
-				String resposta = cliREST.enviarCoordenada(o);
-				gerarToast(resposta);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		try {
+			String resposta = cliREST.atualizar(o);
+			gerarToast(resposta);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
+		Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
 	}
 
 	private void gerarToast(String resposta) {
 		int duration = Toast.LENGTH_LONG;
-		Toast toast = Toast.makeText(getApplicationContext(), "o que ocorreu: " + resposta, duration);
+		Toast toast = Toast.makeText(getApplicationContext(), "o que ocorreu: "
+				+ resposta, duration);
 		toast.show();
 	}
 
@@ -134,5 +135,6 @@ public class OnibusLocation extends Activity implements LocationListener {
 			break;
 		}
 	}
+
 
 }
