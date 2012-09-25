@@ -107,6 +107,8 @@ public class OnibusLocation extends Activity implements LocationListener {
 				+ resposta, duration);
 		toast.show();
 	}
+	
+	
 
 	@Override
 	public void onProviderDisabled(String provider) {
