@@ -1,5 +1,10 @@
 package br.edu.pojos;
 
+/**
+ * Plain Old Java Object com construtor default e métodos getters e setters
+ * @author tgmarinho
+ */
+
 public class Onibus {
     private Integer id;
     private String nome;

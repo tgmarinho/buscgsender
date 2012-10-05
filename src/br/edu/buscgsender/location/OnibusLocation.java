@@ -15,6 +15,18 @@ import br.edu.buscgsender.R;
 import br.edu.buscgsender.webservice.ClienteRest;
 import br.edu.pojos.Onibus;
 
+/**
+ * Classe principal do projeto de TCC.
+ * 
+ * Ela contém o objeto LocationManager que como o próprio nome diz, ela gerencia localização, e os provedores de localização
+ * coordenada geográfica como GPS.
+ * 
+ * A implementação da interface LocationListenter é primordial, pois é ela que fica verificando de tempo em tempo, 
+ * se a localizacão foi alterada.
+ * 
+ * @author tgmarinho
+ */
+
 public class OnibusLocation extends Activity implements LocationListener {
 
 	private LocationManager locationManager;
