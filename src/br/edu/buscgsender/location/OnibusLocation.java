@@ -48,10 +48,10 @@ public class OnibusLocation extends Activity implements LocationListener {
 
 	@Override
 	protected void onResume() {
-		Toast.makeText(this, "app resumed", Toast.LENGTH_SHORT).show();
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
-				0f, this);
 		super.onResume();
+		Toast.makeText(this, "app resumed", Toast.LENGTH_SHORT).show();
+		//gpsfornecendo coordenadas
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,	0, this);
 	}
 
 	@Override
@@ -75,6 +75,8 @@ public class OnibusLocation extends Activity implements LocationListener {
 		Toast.makeText(this, "app stoped", Toast.LENGTH_SHORT).show();
 		super.onStop();
 	}
+	
+	
 
 	@Override
 	public void onLocationChanged(Location location) {
@@ -105,7 +107,9 @@ public class OnibusLocation extends Activity implements LocationListener {
 
 		try {
 			String resposta = cliREST.atualizar(o);
-			gerarToast(resposta);
+			if(resposta!=null){
+				gerarToast(resposta);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

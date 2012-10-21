@@ -76,7 +76,6 @@ public class WebServiceClient {
    public final String[] put(String url, String json) {
      String[] result = new String[2];
      try {
-
          HttpPut httpPut = new HttpPut(new URI(url));
          httpPut.setHeader("Content-type", "application/json");
          StringEntity sEntity = new StringEntity(json, "UTF-8");

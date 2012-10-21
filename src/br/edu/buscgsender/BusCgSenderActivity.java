@@ -39,7 +39,7 @@ public class BusCgSenderActivity extends Activity {
 		// Se selecionar algum planeta atualiza a imagem
 		combo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			public void onItemSelected(AdapterView<?> parent, View v, int posicao, long id) {
-
+				posicao++; // para nao ter o 0
 //				if (posicao != 0) {
 //				}
 
@@ -48,7 +48,7 @@ public class BusCgSenderActivity extends Activity {
 
 				// int pos = posicao;
 				setPosicaoSpinner(posicao);
-				setNomeBusao((String) parent.getItemAtPosition(posicao));
+				setNomeBusao((String) parent.getItemAtPosition(posicao-1));
 				System.out.println(getNomeBusao());
 				System.out.println(getPosicaoSpinner());
 				btn_enviar.setOnClickListener(new OnClickListener() {
@@ -68,15 +68,19 @@ public class BusCgSenderActivity extends Activity {
 
 			}
 
-			public void onNothingSelected(AdapterView<?> parent) {
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+				
 			}
+
+			
 		});
 	}
 
 	private String[] todosOnibus() {
 
-		String[] bus = new String[] { "Maria Ap Pedrossian - Oiti",
-				"Arnaldo Estevão Figueredo", "070", "Tiradentes" };
+		String[] bus = new String[] { "Arnaldo Estevão Figueredo", "Maria Ap Pedrossian - Oiti", "070", "Tiradentes" };
 
 		return bus;
 	}
