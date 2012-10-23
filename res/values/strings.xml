@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, BusCgSenderActivity!</string>
-    <string name="app_name">Buscgsender</string>
+    <string name="label">Atenção: Permaneça nessa tela para continuar enviando as coordenadas geográficas de latitude e longitude desse Ônibus. Precione a tecla voltar do smartphone para sair do aplicativo.</string>
+    <string name="app_name">BusCgSender</string>
 
 </resources>

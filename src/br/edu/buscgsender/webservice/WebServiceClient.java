@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.edu.buscgsender.webservice;
 
 import java.io.ByteArrayOutputStream;
@@ -15,6 +11,13 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import android.util.Log;
 import org.apache.http.client.methods.HttpPut;
+
+/**
+ * Créditos: Código concedido por raphael.franckini@gmail.com implementado em seu projeto http://code.google.com/p/projeto-final-android/source/browse/#
+ * 
+ * Adaptação do código @tgmarinho
+ * 
+ */
 
 public class WebServiceClient {
 

@@ -1,13 +1,16 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.edu.buscgsender.webservice;
 
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+
+/**
+ * Créditos: Código concedido por raphael.franckini@gmail.com implementado em seu projeto http://code.google.com/p/projeto-final-android/source/browse/#
+ * 
+ * Adaptação do código @tgmarinho
+ * 
+ */
 
 public class HttpClientSingleton {
 

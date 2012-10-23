@@ -36,48 +36,47 @@ public class OnibusLocation extends Activity implements LocationListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Toast.makeText(this, "Aplicação iniciada", Toast.LENGTH_SHORT).show();
 		setContentView(R.layout.main);
+		// Obtendo a referencia do SO para aplicação trabalhar com a o sistema de localização
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 		
 		it = getIntent();
 		params =  it.getExtras();
 		
-		System.err.println("nome do onibus: " + params.getString("nome_onibus"));
-		System.err.println("id do onibus: " + params.getInt("id_onibus"));
+		android.util.Log.i("BUSCG", "nome do onibus: " + params.getString("nome_onibus"));
+		android.util.Log.i("BUSCG", "id do onibus: " + params.getInt("id_onibus"));
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Toast.makeText(this, "app resumed", Toast.LENGTH_SHORT).show();
-		//gpsfornecendo coordenadas
+		Toast.makeText(this, "Aplicação em execução", Toast.LENGTH_SHORT).show();
+		// GPS é o fornecedor de localização, 0 segundos, 0 metros, contexto
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,	0, this);
 	}
 
 	@Override
 	protected void onPause() {
-		Toast.makeText(this, "app paused", Toast.LENGTH_SHORT).show();
-		// turn off to save battery
+		Toast.makeText(this, "Aplicação pausada", Toast.LENGTH_SHORT).show();
+		// Para de obter a localização, econmiza a bateria do smartphone
 		locationManager.removeUpdates(this);
 		super.onPause();
 	}
 
 	@Override
 	public void finish() {
-		// save some information before exit
-		Toast.makeText(this, "activity killed", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Aplicação terminada", Toast.LENGTH_SHORT).show();
 		super.finish();
 	}
 
 	@Override
 	protected void onStop() {
-		// save some information before exit
-		Toast.makeText(this, "app stoped", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Aplicação parada", Toast.LENGTH_SHORT).show();
 		super.onStop();
 	}
 	
-	
-
+	// Toda vez que a localização é atualizada esse método é chamado automaticamente pelo sistema
 	@Override
 	public void onLocationChanged(Location location) {
 		double longitude = location.getLongitude();
@@ -119,40 +118,38 @@ public class OnibusLocation extends Activity implements LocationListener {
 
 	private void gerarToast(String resposta) {
 		int duration = Toast.LENGTH_LONG;
-		Toast toast = Toast.makeText(getApplicationContext(), "o que ocorreu: "
-				+ resposta, duration);
+		Toast toast = Toast.makeText(getApplicationContext(), "o que ocorreu: " + resposta, duration);
 		toast.show();
 	}
-	
 	
 
 	@Override
 	public void onProviderDisabled(String provider) {
-		Toast.makeText(this, "Provider is disable", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "GPS está desligado", Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
 	public void onProviderEnabled(String provider) {
-		Toast.makeText(this, "Provider is enable", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "GPS está ligado", Toast.LENGTH_SHORT).show();
 	}
 
+	
+	// toda vez que ocorre alguma mudança de status no provedor de localização esse método é chamado
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 		switch (status) {
 		case LocationProvider.OUT_OF_SERVICE:
-			Toast.makeText(this, "Status Changed: Out of Service",
+			Toast.makeText(this, "Status Modificado: Sem serviço",
 					Toast.LENGTH_SHORT).show();
 			break;
 		case LocationProvider.TEMPORARILY_UNAVAILABLE:
-			Toast.makeText(this, "Status Changed: Temporarily Unavailable",
+			Toast.makeText(this, "Status Modificado: Temporariamente indisponível",
 					Toast.LENGTH_SHORT).show();
 			break;
 		case LocationProvider.AVAILABLE:
-			Toast.makeText(this, "Status Changed: Available",
+			Toast.makeText(this, "Status Modificado: Disponível",
 					Toast.LENGTH_SHORT).show();
 			break;
 		}
 	}
-
-
 }

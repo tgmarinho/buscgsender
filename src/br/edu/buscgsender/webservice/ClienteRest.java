@@ -1,12 +1,15 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.edu.buscgsender.webservice;
 
 import br.edu.pojos.Onibus;
 
 import com.google.gson.Gson;
+
+/**
+ * Créditos: Código concedido por raphael.franckini@gmail.com implementado em seu projeto http://code.google.com/p/projeto-final-android/source/browse/#
+ * 
+ * Adaptação do código @tgmarinho
+ * 
+ */
 
 public class ClienteRest {
 
@@ -14,8 +17,7 @@ public class ClienteRest {
 	private static final String URL_WS = "http://tgmarinhotcc.no-ip.info:8089/ServerBus/rest/onibus/";
 
 	// local
-	// private static final String URL_WS =
-	// "http://192.168.1.103:8089/ServerBus/rest/onibus/";
+	// private static final String URL_WS = "http://192.168.1.103:8089/ServerBus/rest/onibus/";
 
 	public Onibus get(int id) throws Exception {
 
@@ -51,12 +53,7 @@ public class ClienteRest {
 				String[] resposta = new WebServiceClient().put(URL_WS, onibusJSON);
 				if (resposta != null) {
 					if (resposta[0].equals("200")) {
-						System.out.println(resposta[0]);
-						System.out.println(resposta[1]);
-						System.out.println("SUCESSO ATUALIZEI");
 						return resposta[1];
-					} else {
-						System.out.println("vixi " + resposta);
 					}
 				}
 			}
@@ -66,7 +63,6 @@ public class ClienteRest {
 			return e.getMessage();
 		}
 		return null;
-
 	}
 
 	public String deletar(int id) {

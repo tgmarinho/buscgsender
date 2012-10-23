@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.Toast;
 import br.edu.buscgsender.location.OnibusLocation;
 
 /**
@@ -25,9 +26,14 @@ public class BusCgSenderActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.exemplo_spinner);
+		setContentView(R.layout.buscgsender);
 
-		Spinner combo = (Spinner) findViewById(R.id.comboPlanetas);
+		
+		// Mensagem de Alerta
+		Toast.makeText(this, "MOTORISTA SELECIONE A LINHA DE ÔNIBUS QUE ESTARÁ DIRIGINDO...", Toast.LENGTH_LONG).show();
+		
+		
+		Spinner combo = (Spinner) findViewById(R.id.comboLinhaOnibus);
 		final Button btn_enviar = (Button) findViewById(R.id.btn_enviar);
 
 		@SuppressWarnings("rawtypes")
@@ -39,14 +45,8 @@ public class BusCgSenderActivity extends Activity {
 		// Se selecionar algum planeta atualiza a imagem
 		combo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			public void onItemSelected(AdapterView<?> parent, View v, int posicao, long id) {
-				posicao++; // para nao ter o 0
-//				if (posicao != 0) {
-//				}
-
-				btn_enviar.setVisibility(View.VISIBLE);
-				System.out.println(posicao);
-
-				// int pos = posicao;
+			
+				posicao++; // para nao ter o Zero
 				setPosicaoSpinner(posicao);
 				setNomeBusao((String) parent.getItemAtPosition(posicao-1));
 				System.out.println(getNomeBusao());
@@ -69,10 +69,7 @@ public class BusCgSenderActivity extends Activity {
 			}
 
 			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void onNothingSelected(AdapterView<?> arg0) {}
 
 			
 		});
